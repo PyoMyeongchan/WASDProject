@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:\\\\Users\\\\user\\\\Documents\\\\GitHub\\\\WASDProject\" status)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

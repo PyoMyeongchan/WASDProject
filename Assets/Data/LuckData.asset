@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b408e4c699b53a49bb016553c6d5771, type: 3}
+  m_Name: LuckData
+  m_EditorClassIdentifier: Assembly-CSharp::LuckDataSO
+  luckyItems:
+  - "\uB124\uC78E\uD074\uB85C\uBC84"
+  - "\uBCC4"
+  - "\uB2EC"
+  - "\uBB34\uC9C0\uAC1C"
+  - "\uB2E4\uC774\uC544\uBAAC\uB4DC"
+  - "\uC5F4\uC1E0"
+  - "\uBC9A\uAF43"
+  - "\uB098\uCE68\uBC18"
+  - "\uBC18\uC9DD\uC774"
+  - "\uC0AC\uD0D5"
+  luckyItemIcons: []
+  luckyNumbers:
+  - 7
+  - 3
+  - 13
+  - 21
+  - 42
+  - 8
+  - 11
+  - 17
+  - 28
+  - 99
+  luckyMessages:
+  - "\uC624\uB298\uC740 \uC88B\uC740 \uC77C\uC774 \uC0DD\uAE38 \uAC70\uC608\uC694!"
+  - "\uB2F9\uC2E0\uC758 \uBBF8\uC18C\uAC00 \uD589\uC6B4\uC744 \uBD80\uB985\uB2C8\uB2E4."
+  - "\uC791\uC740 \uD589\uB3D9\uC774 \uD070 \uBCC0\uD654\uB97C \uB9CC\uB4E4\uC5B4\uC694."
+  - "\uC624\uB298 \uD558\uB8E8\uB3C4 \uBE5B\uB098\uB294 \uD558\uB8E8\uAC00 \uB420
+    \uAC70\uC608\uC694!"
+  - "\uD589\uC6B4\uC740 \uC900\uBE44\uB41C \uC790\uC5D0\uAC8C \uCC3E\uC544\uC635\uB2C8\uB2E4."
+  - "\uC624\uB298\uC740 \uBB34\uC5C7\uC774\uB4E0 \uC798 \uB420 \uAC83 \uAC19\uC740
+    \uB0A0\uC774\uC5D0\uC694."
+  - "\uB2F9\uC2E0 \uC8FC\uBCC0\uC5D0 \uD589\uC6B4\uC774 \uAC00\uB4DD\uD569\uB2C8\uB2E4."
+  - "\uC624\uB298\uC758 \uC120\uD0DD\uC774 \uB0B4\uC77C\uC758 \uD589\uBCF5\uC774
+    \uB429\uB2C8\uB2E4."
+  - "\uAE0D\uC815\uC801\uC778 \uB9C8\uC74C\uC774 \uD589\uC6B4\uC744 \uB04C\uC5B4\uB2F9\uAE41\uB2C8\uB2E4."
+  - "\uC624\uB298 \uD558\uB8E8, \uB2F9\uC2E0\uC740 \uD2B9\uBCC4\uD55C \uC0AC\uB78C\uC785\uB2C8\uB2E4!"
