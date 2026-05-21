@@ -146,6 +146,9 @@ public static class LuckSlotSceneBuilder
         Link(gm, "resultCard",  rcUI);
         Link(gm, "luckData",    luckData);
 
+        // ── Toast UI ───────────────────────────────────────────
+        BuildToast(ct);
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
@@ -467,6 +470,31 @@ public static class LuckSlotSceneBuilder
         var prefab = PrefabUtility.SaveAsPrefabAsset(rootGO, path);
         Object.DestroyImmediate(rootGO);
         return prefab.GetComponent<HistoryItemUI>();
+    }
+
+    // ── Toast UI 생성 ──────────────────────────────────────────
+    static void BuildToast(Transform ct)
+    {
+        var toastGO = new GameObject("ToastUI");
+        toastGO.transform.SetParent(ct, false);
+        RectTransform toastRT = toastGO.AddComponent<RectTransform>();
+        // 화면 하단 중앙, 다른 UI 위에 렌더링되도록 Canvas 마지막에 추가
+        Anchors(toastRT, 0.10f, 0.08f, 0.90f, 0.17f);
+
+        AddImage(toastRT, new Color32(30, 30, 30, 220));
+
+        var cg = toastGO.AddComponent<CanvasGroup>();
+        cg.alpha = 0f;
+        cg.blocksRaycasts = false;
+
+        RectTransform textRT = NewTMP("Text", toastGO.transform, "", 32, Color.white);
+        Stretch(textRT);
+        var tmp = textRT.GetComponent<TextMeshProUGUI>();
+        tmp.alignment = TextAlignmentOptions.Center;
+
+        var toast = toastGO.AddComponent<ToastUI>();
+        Link(toast, "canvasGroup",  cg);
+        Link(toast, "messageText",  tmp);
     }
 
     // ── 버튼 생성 헬퍼 ─────────────────────────────────────────
