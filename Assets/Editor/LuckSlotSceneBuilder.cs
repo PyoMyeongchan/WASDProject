@@ -84,7 +84,7 @@ public static class LuckSlotSceneBuilder
 
         // 타이틀
         RectTransform titleRT = NewTMP("TitleText", mainPanel,
-            "✨ 오늘의 행운 뽑기 ✨", 55, Color.white);
+            "오늘의 행운 뽑기", 55, Color.white);
         Anchors(titleRT, 0f, 0.88f, 1f, 0.97f);
         titleRT.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
 
@@ -178,7 +178,7 @@ public static class LuckSlotSceneBuilder
         Transform p = panelGO.transform;
 
         // 카드 제목
-        RectTransform rcTitleRT = NewTMP("CardTitle", p, "✨ 오늘의 행운 카드", 50, C_DarkText);
+        RectTransform rcTitleRT = NewTMP("CardTitle", p, "오늘의 행운 카드", 50, C_DarkText);
         Anchors(rcTitleRT, 0.02f, 0.85f, 0.98f, 0.98f);
         var rcTitleTMP = rcTitleRT.GetComponent<TextMeshProUGUI>();
         rcTitleTMP.alignment = TextAlignmentOptions.Center;
@@ -247,6 +247,13 @@ public static class LuckSlotSceneBuilder
             BuildButton("HistoryButton", p, "기록 보기", C_PurpleBtn, Color.white, 34);
         Anchors(histBtnGO.GetComponent<RectTransform>(), 0.52f, 0.04f, 0.96f, 0.15f);
 
+        // 스파클 이펙트 컨테이너 — 카드 위에 렌더링되도록 마지막 자식으로 추가
+        var sparkleGO = new GameObject("SparkleContainer");
+        sparkleGO.transform.SetParent(p, false);
+        Stretch(sparkleGO.AddComponent<RectTransform>());
+        sparkleGO.AddComponent<CanvasGroup>().blocksRaycasts = false;
+        var sparkle = sparkleGO.AddComponent<CardSparkleEffect>();
+
         // ResultCardUI 컴포넌트 부착 & 연결
         ResultCardUI rcUI = panelGO.AddComponent<ResultCardUI>();
         Link(rcUI, "cardPanel",        panelGO);
@@ -257,6 +264,7 @@ public static class LuckSlotSceneBuilder
         Link(rcUI, "itemIconImage",    iconImg);
         Link(rcUI, "shareButton",      shareBtn);
         Link(rcUI, "historyButton",    histBtn);
+        Link(rcUI, "sparkleEffect",    sparkle);
         // historyPanel 은 BuildScene 에서 연결
 
         return (rcUI, panelGO);
@@ -287,7 +295,7 @@ public static class LuckSlotSceneBuilder
         Transform cardT = cardGO.transform;
 
         // 카드 타이틀
-        RectTransform hTitleRT = NewTMP("Title", cardT, "📋 행운 기록", 50, C_DarkText);
+        RectTransform hTitleRT = NewTMP("Title", cardT, "행운 기록", 50, C_DarkText);
         Anchors(hTitleRT, 0.02f, 0.88f, 0.98f, 0.99f);
         hTitleRT.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
         hTitleRT.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
@@ -401,9 +409,17 @@ public static class LuckSlotSceneBuilder
             reelTMP.fontSize = 52;
         }
 
+        // 릴 멈춤 강조 오버레이 (평소 alpha=0, 멈출 때 펄스)
+        var glowGO  = new GameObject("ReelGlow");
+        glowGO.transform.SetParent(reelGO.transform, false);
+        Stretch(glowGO.AddComponent<RectTransform>());
+        var glowImg = glowGO.AddComponent<Image>();
+        glowImg.color = new Color32(255, 220, 60, 0); // 골드, 초기 투명
+
         // SlotReel 컴포넌트
         var slotReel = reelGO.AddComponent<SlotReel>();
         Link(slotReel, "displayText", reelTMP);
+        Link(slotReel, "glowImage",   glowImg);
 
         // 아이콘 (행운 물건 릴만)
         if (withIcon)

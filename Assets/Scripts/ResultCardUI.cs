@@ -24,7 +24,8 @@ public class ResultCardUI : MonoBehaviour
     [Header("히스토리 패널 (3단계)")]
     [SerializeField] private HistoryPanel historyPanel;
 
-    [Header("페이드 인")]
+    [Header("연출 효과")]
+    [SerializeField] private CardSparkleEffect sparkleEffect;
     [SerializeField] private float fadeDuration = 0.5f;
 
     private CanvasGroup canvasGroup;
@@ -81,6 +82,7 @@ public class ResultCardUI : MonoBehaviour
         cardPanel.SetActive(true);
         StopAllCoroutines();
         StartCoroutine(FadeIn());
+        sparkleEffect?.Play();
         AudioManager.Instance?.PlayCardReveal();
     }
 

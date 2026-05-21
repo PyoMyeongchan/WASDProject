@@ -7,6 +7,7 @@ public class SlotReel : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI displayText;
     [SerializeField] private Image           iconDisplay;  // 선택 사항 — 결과 아이콘 표시
+    [SerializeField] private Image           glowImage;    // 릴 멈춤 강조 오버레이
 
     [Header("스핀 속도 설정")]
     [SerializeField] private float fastSpinInterval  = 0.05f;
@@ -98,7 +99,45 @@ public class SlotReel : MonoBehaviour
             StartCoroutine(PunchScaleAnimation(iconDisplay.transform));
         }
 
+        if (glowImage != null)
+            StartCoroutine(GlowPulse());
+
         isAnimationFinished = true;
+    }
+
+    private IEnumerator GlowPulse()
+    {
+        float fadeIn  = 0.12f;
+        float hold    = 0.18f;
+        float fadeOut = 0.35f;
+
+        // Fade in
+        float t = 0f;
+        while (t < fadeIn)
+        {
+            t += Time.deltaTime;
+            SetGlowAlpha(Mathf.Clamp01(t / fadeIn));
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(hold);
+
+        // Fade out
+        t = 0f;
+        while (t < fadeOut)
+        {
+            t += Time.deltaTime;
+            SetGlowAlpha(Mathf.Clamp01(1f - t / fadeOut));
+            yield return null;
+        }
+        SetGlowAlpha(0f);
+    }
+
+    private void SetGlowAlpha(float a)
+    {
+        if (glowImage == null) return;
+        var c = glowImage.color;
+        glowImage.color = new Color(c.r, c.g, c.b, a);
     }
 
     private IEnumerator PunchScaleAnimation(Transform target)
