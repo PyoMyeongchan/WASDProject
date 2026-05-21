@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
         if (SaveManager.HasPlayedToday())
         {
             var (item, number, message) = SaveManager.LoadResult();
+            // PlayerPrefs와 히스토리 JSON이 어긋날 경우를 대비해 항상 동기화
+            // AddRecord 내부에서 오늘 날짜 중복은 자동으로 덮어쓰기됨
+            LuckHistoryManager.AddRecord(item, number, message);
             Sprite icon = luckData != null ? luckData.GetItemIcon(item) : null;
             slotMachine.SetButtonState(false);
             slotMachine.ShowSavedResult(item, number, message);

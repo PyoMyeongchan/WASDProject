@@ -11,6 +11,11 @@ public class HistoryItemUI : MonoBehaviour
 
     public void SetData(LuckRecord record)
     {
+        if (dateText == null || itemText == null || numberText == null || messageText == null)
+        {
+            Debug.LogError("[HistoryItemUI] 텍스트 필드가 연결되지 않았습니다. 씬을 재생성해 주세요.");
+            return;
+        }
         dateText.text    = record.DisplayDate;
         itemText.text    = $"물건: {record.item}";
         numberText.text  = $"숫자: {record.number}";

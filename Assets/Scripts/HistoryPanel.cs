@@ -20,6 +20,8 @@ public class HistoryPanel : MonoBehaviour
 
     public void Show()
     {
+        // Canvas 내 최상위로 이동해 다른 UI에 가려지지 않도록 보장
+        transform.SetAsLastSibling();
         panelRoot.SetActive(true);
         RefreshList();
     }
@@ -31,6 +33,12 @@ public class HistoryPanel : MonoBehaviour
 
     private void RefreshList()
     {
+        if (historyItemPrefab == null)
+        {
+            Debug.LogError("[HistoryPanel] historyItemPrefab이 연결되지 않았습니다. 씬을 재생성해 주세요.");
+            return;
+        }
+
         // 기존 항목 제거
         foreach (var item in spawnedItems)
             Destroy(item.gameObject);
@@ -50,5 +58,11 @@ public class HistoryPanel : MonoBehaviour
             item.SetData(record);
             spawnedItems.Add(item);
         }
+
+        // ContentSizeFitter가 즉시 반영되도록 강제 갱신
+        Canvas.ForceUpdateCanvases();
+        var contentRT = contentParent.GetComponent<RectTransform>();
+        if (contentRT != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRT);
     }
 }

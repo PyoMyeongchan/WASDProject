@@ -56,7 +56,7 @@ public static class LuckSlotSceneBuilder
         sfxSrc.playOnAwake = false;
         Link(audioMgr, "sfxSource", sfxSrc);
 
-        new GameObject("ShareManager").AddComponent<ShareManager>();
+        var shareMgr = new GameObject("ShareManager").AddComponent<ShareManager>();
         new GameObject("ServerLuckManager").AddComponent<ServerLuckManager>();
 
         // ── Canvas ─────────────────────────────────────────────
@@ -128,6 +128,8 @@ public static class LuckSlotSceneBuilder
         // ── Result Panel ───────────────────────────────────────
         var (rcUI, resultPanelGO) = BuildResultPanel(ct);
         resultPanelGO.SetActive(false);
+        // 공유 버튼이 스크린샷을 찍을 대상 패널 연결
+        Link(shareMgr, "shareTargetPanel", resultPanelGO.GetComponent<RectTransform>());
 
         // ── History Panel ──────────────────────────────────────
         HistoryPanel histComp      = BuildHistoryPanel(ct);
@@ -187,9 +189,10 @@ public static class LuckSlotSceneBuilder
         // 구분선
         Anchors(AddImage(NewRT("Divider1", p), C_Divider), 0.05f, 0.737f, 0.95f, 0.744f);
 
-        // 행운 물건 행
+        // 행운 물건 행 — 레이블·아이콘·값 모두 좌/우 영역 내 중앙 정렬
         RectTransform iLabelRT = NewTMP("Label_Item", p, "행운 물건", 33, C_DarkText);
         Anchors(iLabelRT, 0.04f, 0.62f, 0.46f, 0.73f);
+        iLabelRT.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
 
         var iconGO  = new GameObject("ItemIconImage");
         iconGO.transform.SetParent(p, false);
@@ -201,31 +204,32 @@ public static class LuckSlotSceneBuilder
         RectTransform iValueRT = NewTMP("ItemValue", p, "—", 38, C_DarkText);
         Anchors(iValueRT, 0.60f, 0.62f, 0.98f, 0.73f);
         var iValueTMP = iValueRT.GetComponent<TextMeshProUGUI>();
-        iValueTMP.alignment = TextAlignmentOptions.Right;
+        iValueTMP.alignment = TextAlignmentOptions.Center;
         iValueTMP.fontStyle = FontStyles.Bold;
 
         // 구분선
         Anchors(AddImage(NewRT("Divider2", p), C_Divider), 0.05f, 0.607f, 0.95f, 0.614f);
 
-        // 행운 숫자 행
+        // 행운 숫자 행 — 50/50 분할 후 양쪽 모두 중앙 정렬
         RectTransform nLabelRT = NewTMP("Label_Number", p, "행운 숫자", 33, C_DarkText);
-        Anchors(nLabelRT, 0.04f, 0.49f, 0.55f, 0.60f);
+        Anchors(nLabelRT, 0.04f, 0.49f, 0.50f, 0.60f);
+        nLabelRT.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
 
-        RectTransform nValueRT = NewTMP("NumberValue", p, "—", 44, C_DarkText);
-        Anchors(nValueRT, 0.55f, 0.49f, 0.98f, 0.60f);
+        RectTransform nValueRT = NewTMP("NumberValue", p, "—", 33, C_DarkText);
+        Anchors(nValueRT, 0.50f, 0.49f, 0.98f, 0.60f);
         var nValueTMP = nValueRT.GetComponent<TextMeshProUGUI>();
-        nValueTMP.alignment = TextAlignmentOptions.Right;
-        nValueTMP.fontStyle = FontStyles.Bold;
+        nValueTMP.alignment = TextAlignmentOptions.Center;
 
         // 구분선
         Anchors(AddImage(NewRT("Divider3", p), C_Divider), 0.05f, 0.477f, 0.95f, 0.484f);
 
-        // 행운 문구 행
-        RectTransform mLabelRT = NewTMP("Label_Message", p, "오늘의 메시지", 33, C_DarkText);
-        Anchors(mLabelRT, 0.04f, 0.36f, 0.98f, 0.47f);
+        // 행운 문구 행 — 버튼 바로 위까지 공간 확보, AutoSizing으로 전체 표시
+        RectTransform mLabelRT = NewTMP("Label_Message", p, "오늘의 메시지", 30, C_DarkText);
+        Anchors(mLabelRT, 0.04f, 0.39f, 0.98f, 0.47f);
+        mLabelRT.GetComponent<TextMeshProUGUI>().alignment = TextAlignmentOptions.Center;
 
-        RectTransform mValueRT = NewTMP("MessageValue", p, "—", 32, new Color32(80, 50, 110, 255));
-        Anchors(mValueRT, 0.04f, 0.19f, 0.98f, 0.36f);
+        RectTransform mValueRT = NewTMP("MessageValue", p, "—", 55, new Color32(80, 50, 110, 255));
+        Anchors(mValueRT, 0.04f, 0.155f, 0.98f, 0.39f);
         var mValueTMP = mValueRT.GetComponent<TextMeshProUGUI>();
         mValueTMP.alignment = TextAlignmentOptions.Center;
         mValueTMP.enableWordWrapping = true;
@@ -299,7 +303,7 @@ public static class LuckSlotSceneBuilder
         RectTransform viewportRT = viewportGO.AddComponent<RectTransform>();
         Stretch(viewportRT);
         var vpImg = viewportGO.AddComponent<Image>();
-        vpImg.color = Color.clear;
+        vpImg.color = Color.white; // 스텐실 마스크가 정상 기록되려면 불투명해야 함; 시각적으로는 showMaskGraphic이 숨김
         var mask = viewportGO.AddComponent<Mask>();
         mask.showMaskGraphic = false;
 
@@ -377,10 +381,22 @@ public static class LuckSlotSceneBuilder
         Stretch(reelTextGO.AddComponent<RectTransform>());
         var reelTMP = reelTextGO.AddComponent<TextMeshProUGUI>();
         reelTMP.text = "?";
-        reelTMP.fontSize = 52;
         reelTMP.color = Color.white;
         reelTMP.alignment = TextAlignmentOptions.Center;
         reelTMP.fontStyle = FontStyles.Bold;
+
+        if (type == "Message")
+        {
+            // 행운 문구는 길이가 가변적이므로 자동 크기 조정 + 줄바꿈
+            reelTMP.enableAutoSizing = true;
+            reelTMP.fontSizeMin = 16;
+            reelTMP.fontSizeMax = 52;
+            reelTMP.enableWordWrapping = true;
+        }
+        else
+        {
+            reelTMP.fontSize = 52;
+        }
 
         // SlotReel 컴포넌트
         var slotReel = reelGO.AddComponent<SlotReel>();
@@ -405,8 +421,9 @@ public static class LuckSlotSceneBuilder
     static HistoryItemUI EnsureHistoryItemPrefab()
     {
         const string path = "Assets/Prefabs/HistoryItemUI.prefab";
-        var existing = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-        if (existing != null) return existing.GetComponent<HistoryItemUI>();
+        // 씬 재생성 시 항상 새로 만들어 내부 링크(텍스트 필드 등) 누락 방지
+        if (AssetDatabase.LoadAssetAtPath<GameObject>(path) != null)
+            AssetDatabase.DeleteAsset(path);
 
         var rootGO = new GameObject("HistoryItemUI");
         RectTransform rootRT = rootGO.AddComponent<RectTransform>();
