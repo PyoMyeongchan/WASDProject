@@ -170,14 +170,23 @@ public static class LuckSlotSceneBuilder
     // ── Result Panel 전체 구성 ─────────────────────────────────
     static (ResultCardUI rcUI, GameObject panelGO) BuildResultPanel(Transform ct)
     {
+        // ── 풀스크린 딤 오버레이 ──────────────────────────────
+        // 전체 화면을 덮어 스핀 버튼 등 하위 UI 입력을 완전히 차단
         var panelGO = new GameObject("ResultPanel");
         panelGO.transform.SetParent(ct, false);
         RectTransform panelRT = panelGO.AddComponent<RectTransform>();
-        Anchors(panelRT, 0.04f, 0.12f, 0.96f, 0.88f);
-        AddImage(panelRT, C_Cream);
+        Stretch(panelRT);
+        AddImage(panelRT, new Color32(10, 5, 25, 200)); // 반투명 어두운 오버레이
         panelGO.AddComponent<CanvasGroup>();
 
-        Transform p = panelGO.transform;
+        // ── 카드 (기존 bounds 유지) ───────────────────────────
+        var cardGO = new GameObject("Card");
+        cardGO.transform.SetParent(panelGO.transform, false);
+        var cardRT = cardGO.AddComponent<RectTransform>();
+        Anchors(cardRT, 0.04f, 0.12f, 0.96f, 0.88f);
+        AddImage(cardRT, C_Cream);
+
+        Transform p = cardGO.transform;
 
         // 카드 제목
         RectTransform rcTitleRT = NewTMP("CardTitle", p, "오늘의 행운 카드", 50, C_DarkText);
@@ -347,6 +356,7 @@ public static class LuckSlotSceneBuilder
         var (closeBtnGO, closeBtn, _) =
             BuildButton("CloseButton", cardT, "닫기", C_RedBtn, Color.white, 38);
         Anchors(closeBtnGO.GetComponent<RectTransform>(), 0.25f, 0.02f, 0.75f, 0.10f);
+        closeBtnGO.AddComponent<ButtonScaleAnimation>();
 
         dimGO.SetActive(false);
 
