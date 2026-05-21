@@ -77,7 +77,8 @@ public static class LuckSlotSceneBuilder
         Transform ct = canvasGO.transform;
 
         // ── Background ─────────────────────────────────────────
-        Stretch(AddImage(NewRT("Background", ct), C_BgDeep));
+        var bgRT = Stretch(AddImage(NewRT("Background", ct), C_BgDeep));
+        bgRT.gameObject.AddComponent<BackgroundStarEffect>();
 
         // ── Main Panel ─────────────────────────────────────────
         RectTransform mainPanel = Stretch(NewRT("MainPanel", ct));
@@ -111,6 +112,7 @@ public static class LuckSlotSceneBuilder
         var (spinBtnGO, spinBtn, spinBtnTMP) =
             BuildButton("SpinButton", mainPanel, "오늘의 행운 뽑기!", C_Gold, C_DarkText, 46);
         Anchors(spinBtnGO.GetComponent<RectTransform>(), 0.08f, 0.07f, 0.92f, 0.17f);
+        spinBtnGO.AddComponent<ButtonScaleAnimation>();
 
         // SlotMachineController (빈 자식에 부착)
         var smcGO = new GameObject("SlotMachineController");
@@ -242,10 +244,12 @@ public static class LuckSlotSceneBuilder
         var (shareBtnGO, shareBtn, _) =
             BuildButton("ShareButton", p, "공유하기", C_BlueBtn, Color.white, 34);
         Anchors(shareBtnGO.GetComponent<RectTransform>(), 0.04f, 0.04f, 0.48f, 0.15f);
+        shareBtnGO.AddComponent<ButtonScaleAnimation>();
 
         var (histBtnGO, histBtn, _) =
             BuildButton("HistoryButton", p, "기록 보기", C_PurpleBtn, Color.white, 34);
         Anchors(histBtnGO.GetComponent<RectTransform>(), 0.52f, 0.04f, 0.96f, 0.15f);
+        histBtnGO.AddComponent<ButtonScaleAnimation>();
 
         // 스파클 이펙트 컨테이너 — 카드 위에 렌더링되도록 마지막 자식으로 추가
         var sparkleGO = new GameObject("SparkleContainer");
