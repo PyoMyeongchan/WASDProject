@@ -46,7 +46,7 @@ public class ShareManager : MonoBehaviour
         // 플러그인 없을 때 fallback
         GUIUtility.systemCopyBuffer = shareText;
         Debug.Log($"[ShareManager] 클립보드에 복사:\n{shareText}");
-        ToastUI.Instance?.Show("클립보드에 복사됐어요! ✓");
+        ToastUI.Instance?.Show("클립보드에 복사됐어요!");
 
 #if UNITY_ANDROID || UNITY_IOS
         // 모바일에서는 Android Toast 또는 iOS 알림으로 "복사됨" 안내
